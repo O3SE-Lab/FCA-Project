@@ -20,7 +20,7 @@ def InputContext(fileName):
         for j in M:
             if data[j][i] == 1:
                 I.append((G[i],j))
-    K = (G,M,I)
+    K = [G,M,I]
     return K
 
 
