@@ -27,7 +27,6 @@ def InputContext(fileName):
     K = [G,M,I]
     return K
 
-
 # example
 csv_FileName = "./TestData.csv"
 result = InputContext(csv_FileName)
@@ -77,6 +76,7 @@ def m_dict_InputContext(fileName):
 csv_FileName = "./TestData.csv"
 g_dict_result = g_dict_InputContext(csv_FileName)
 m_dict_result = m_dict_InputContext(csv_FileName)
+
 # print("----------------------------------------------------------------------")
 # print("G_dict : ", g_dict_result)
 # print("----------------------------------------------------------------------")
