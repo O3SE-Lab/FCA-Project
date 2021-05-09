@@ -18,14 +18,15 @@ def InputContext(fileName):
     I = set()
 
     # Process : Formal Context를 읽어들여서 "적절한 Data구조 K"에 저장"
+    # formal context K:=(G, M, I)
     for g in G:
         for m in M:
             if data[m][g] in ['x', 'X']:
                 I.add((g,m))
     
-    # formal context K:=(G, M, I)
     K = [G,M,I]
     return K
+
 
 # example
 csv_FileName = "./TestData.csv"
