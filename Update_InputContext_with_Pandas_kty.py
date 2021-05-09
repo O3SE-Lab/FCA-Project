@@ -32,6 +32,8 @@ csv_FileName = "./TestData.csv"
 result = InputContext(csv_FileName)
 print(result)
 
+
+
 #---------------------------------------------------------------
 # 번외) 딕셔너리 이용
 # G 기준
