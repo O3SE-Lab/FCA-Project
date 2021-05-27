@@ -1,3 +1,6 @@
+# 2018210032 김태영
+#21.05.26
+
 import itertools
 
 def powerset(y):
