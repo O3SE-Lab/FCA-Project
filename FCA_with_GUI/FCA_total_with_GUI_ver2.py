@@ -1,12 +1,15 @@
 # FCA with GUI
 # 2018210032 김태영
 
-# [현재까지 진행 사항]
+# [진행 완료 사항]
 # InputContext 부분 GUI 및 구현 완료, CA CO 부분 GUI 완료 but 구현에서 문제가 생겨 CA CO팀 도움 필요, Formal Concept GUI 및 구현 시작 필요
 # 이전 버전에서 변경 사항 : GUI 레이아웃을 그리드 레이아웃에서 박스 레이아웃으로 변경, InputContext 와 CA CO 부분을 탭을 이용해 쉽게 볼 수 있도록 배치
 
-# [이번주 진행할 사항]
-# FCA 프로그램 제작 완료하기(일부 변수명 의미있게 수정, CA CO 구현 부분 문제 해결 및 구현 완료하기, Context 입력(open csv file) 부분을 탭 밖(탭 윗부분)에 배치하여 Context 입력은 한번만 해도 되도록 배치, Formal Concept GUI & 구현 가능하게)
+# [진행 해야 할 사항]
+# - 일부 변수명 의미있게 수정
+# - CA CO 구현 부분 문제 해결 및 구현 완료
+# - Context 입력(open csv file) 부분을 탭 밖(탭 윗부분)에 배치하여 Context 입력은 한번만 해도 되도록 배치(Ver2)
+# - Formal Concept GUI & 구현
 
 # 만들 때 참고한 사이트 : https://wikidocs.net/book/2165
 
