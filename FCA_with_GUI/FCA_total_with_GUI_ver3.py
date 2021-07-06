@@ -3,7 +3,7 @@
 
 # [진행 완료 사항]
 # Context 입력(open csv file) 부분을 탭 밖(탭 윗부분)에 배치
-# 이전 버전에서 변경 사항 : Context 입력(open csv file) 부분을 탭 밖(탭 윗부분)에 배치하여 Context 입력은 한번만 해도 되도록 배치
+# 이전 버전에서 변경 사항 : Context 입력(open csv file) 부분을 탭 밖(탭 윗부분)에 배치해 Context 입력은 한번만 해도 되도록 배치
 
 # [진행 해야 할 사항]
 # - 각 tab 내 GUI 좀 더 괜찮은 구조 있으면 수정
