@@ -1,15 +1,19 @@
 # FCA with GUI
 # 2018210032 김태영
 
+# 최근 수정 일자 : 2021.07.10
+
 # [진행 완료 사항]
-# InputContext 부분 GUI 및 구현 완료, CA CO 부분 GUI 완료 but 구현에서 문제가 생겨 CA CO팀 도움 필요, Formal Concept GUI 및 구현 시작 필요
+# InputContext : GUI 및 기능 구현 완료
+# CA CO : GUI 완료 but 구현에서 문제가 생겨 CA CO팀 도움 필요
+# Formal Concept : GUI 완료, 기능 구현 powerset까지 완료
 # 이전 버전에서 변경 사항 : GUI 레이아웃을 그리드 레이아웃에서 박스 레이아웃으로 변경, InputContext 와 CA CO 부분을 탭을 이용해 쉽게 볼 수 있도록 배치
 
 # [진행 해야 할 사항]
 # - 일부 변수명 의미있게 수정
 # - CA CO 구현 부분 문제 해결 및 구현 완료
-# - Context 입력(open csv file) 부분을 탭 밖(탭 윗부분)에 배치하여 Context 입력은 한번만 해도 되도록 배치(Ver2)
-# - Formal Concept GUI & 구현
+# - Context 입력(open csv file) 부분을 탭 밖(탭 윗부분)에 배치하여 Context 입력은 한번만 해도 되도록 배치(Ver3)
+# - Formal Concept 구현 부분 마무리
 
 # 만들 때 참고한 사이트 : https://wikidocs.net/book/2165
 
@@ -22,13 +26,13 @@ from PyQt5.QtWidgets import *
 # MainWindow : 메뉴바, 스테이터스바 등 미리 설정되어있는 최상위 위젯
 
 #-----------------------------------------------
-# Main
+# Main 클래스
 class FCAwithGUI(QWidget):
     def __init__(self):
         super().__init__()
-        self.initUI()
+        self.mainUI()
 
-    def initUI(self):
+    def mainUI(self):
         # 탭 생성
         tabs = QTabWidget()
         tabs.addTab(ICTab(), 'InputContext')
@@ -63,8 +67,7 @@ class ICTab(QWidget):
         self.initUI()
 
     def initUI(self):
-
-        # InputContext - 라벨들 생성
+        # InputContext - 라벨 생성
         ICtitleL = QLabel('[ Context 입력 ]') # context 입력 타이틀 라벨
         ICfptitleL = QLabel('  선택 파일(*.csv) : ', self)  # 선택 파일 타이틀 라벨
         self.ICfilePathL = QLabel('', self)  # 선택한 파일 경로를 보여줄 라벨
@@ -213,10 +216,8 @@ class CACOTab(QWidget):
         COexcuteB.clicked.connect(self.CO_clear_text)
         COexcuteB.clicked.connect(lambda: self.CO(self.COte.toPlainText()))
 
-        # InputContext - 실행 결과 출력 화면 생성
+        # CACO - 실행 결과 출력 화면 생성
         self.CAtb = QTextBrowser()
-
-        # InputContext - 실행 결과 출력 화면 생성
         self.COtb = QTextBrowser()
 
         # 박스레이아웃을 사용한 배치 (변수명 좀 더 의미있게 수정 필요)
@@ -313,10 +314,7 @@ class CACOTab(QWidget):
         M = []
         A_Prime = []
 
-        AL = []
-        AL = A.split(',')
-
-        for a in AL:
+        for a in A:
             # 임시적으로 저장할 리스트
             temp = []
 
@@ -351,6 +349,9 @@ class CACOTab(QWidget):
 
     # CO 검토 or 수정 필요
     def CO(self, B):
+        K = self.InputContext(self.ICfilePathL.text())
+        I = K[2]
+
         # g들을 집어넣을 리스트
         G = []
 
@@ -362,7 +363,7 @@ class CACOTab(QWidget):
             temp = []
 
             # I에서 B의 요소들의 속성들을 가져와 G에 저장
-            for i in K[2]:
+            for i in I:
                 if i[1] == b:
                     temp.append(i[0])
             G.append(temp)
@@ -383,6 +384,8 @@ class CACOTab(QWidget):
             # is_in이 True일경우 B_Prime에 넣음
             if is_in:
                 B_Prime.append(g)
+
+        self.CAtb.append(B_Prime)
 
         return B_Prime
 
@@ -413,7 +416,174 @@ class FCTab(QWidget):
         self.initUI()
 
     def initUI(self):
+        # InputContext - 라벨, 버튼, 텍스트브라우저 생성
+        ICtitleL = QLabel('[ Context 입력 ]')  # context 입력 타이틀 라벨
+        ICfptitleL = QLabel('  선택 파일(*.csv) : ', self)  # 선택 파일 타이틀 라벨
+        self.ICfilePathL = QLabel('', self)  # 선택한 파일 경로를 보여줄 라벨
+
+        ICresultTitleL = QLabel('[ Input Context 실행결과 ]', self)  # IC 실행결과 타이틀 라벨
+        self.ICtb = QTextBrowser()  # IC 실행 결과 출력할 텍스트 브라우저
+
+        ICfileOpenB = QPushButton('Context 입력(Open CSV File)', self)  # context 입력 버튼
+        ICfileOpenB.clicked.connect(self.csv_open)  # 버튼 클릭 시 csv_open() 실행
+
+        ICexcuteB = QPushButton('실행', self)  # 실행 버튼
+        ICexcuteB.clicked.connect(self.IC_clear_text)  # 버튼 클릭 시 결과창 clear 후
+        ICexcuteB.clicked.connect(lambda: self.ICresult(self.InputContext(self.ICfilePathL.text())))  # 결과 출력
+
+        clearB = QPushButton('CLEAR', self)  # clear 버튼
+        clearB.clicked.connect(self.IC_clear_text)  # 버튼 클릭 시 ICtb(결과창(텍스트브라우저)) clear
+
+        # FormalConcept
+        # FormalConcept - 라벨 생성 및 설정
+        PSresultTitleL = QLabel('[Powerset 실행결과]', self)  # PS 실행결과 타이틀 라벨
+        FCresultTitleL = QLabel('[FormalConcept 실행결과]', self)  # FC 타이틀 라벨
+
+        # Powerset 선택 콤보 박스
+        self.GMselectC = QComboBox()
+        self.GMselectC.addItem("G")
+        self.GMselectC.addItem("M")
+
+        # Powerset - 실행 결과 출력 화면 생성
+        self.PStb = QTextBrowser()
+
+        # EC - 실행 결과 출력 화면 생성
+        self.ECtb = QTextBrowser()
+
+        # 버튼 생성 및 설정
+        # PS
+        PSexcuteB = QPushButton('실행', self)
+        PSclearB = QPushButton('CLEAR', self)
+        PSexcuteB.clicked.connect(self.PS_clear_text)
+        PSexcuteB.clicked.connect(lambda: self.powerset(list(self.InputContext(self.ICfilePathL.text())[0])) if self.GMselectC.currentText() == "G" else self.powerset(list(self.InputContext(self.ICfilePathL.text())[1])))
+        # EC
+        ECexcuteB = QPushButton('실행', self)
+        ECclearB = QPushButton('CLEAR', self)
+        ECexcuteB.clicked.connect(self.EC_clear_text)
+        ECexcuteB.clicked.connect(lambda: self.extractConcepts(self.InputContext(self.ICfilePathL.text())))
+
+        # 구분 경계선 --- 이런거
+        jtextL = QLabel('-' * 118)
+
+        # 박스레이아웃을 사용한 배치 (변수명 좀 더 의미있게 수정 필요)
+        hbox1 = QHBoxLayout()
+        hbox1.addWidget(ICfptitleL)
+        hbox1.addWidget(self.ICfilePathL)
+        hbox1.addStretch()
+
+        hbox2 = QHBoxLayout()
+        hbox2.addWidget(ICfileOpenB)
+        hbox2.addWidget(ICexcuteB)
+        hbox2.addWidget(clearB)
+
+        hbox3 = QHBoxLayout()
+        hbox3.addWidget(self.GMselectC)
+        hbox3.addStretch()
+
+        hbox4 = QHBoxLayout()
+        hbox4.addWidget(PSexcuteB)
+        hbox4.addWidget(PSclearB)
+
+        hbox5 = QHBoxLayout()
+        hbox5.addWidget(ECexcuteB)
+        hbox5.addWidget(ECclearB)
+
+        vbox = QVBoxLayout()
+        vbox.addWidget(ICtitleL)
+        vbox.addLayout(hbox1)
+        vbox.addWidget(ICresultTitleL)
+        vbox.addWidget(self.ICtb)
+        vbox.addLayout(hbox2)
+        vbox.addWidget(jtextL)
+
+        vbox.addWidget(PSresultTitleL)
+        vbox.addLayout(hbox3)
+        vbox.addWidget(self.PStb)
+        vbox.addLayout(hbox4)
+        vbox.addWidget(FCresultTitleL)
+        vbox.addWidget(self.ECtb)
+        vbox.addLayout(hbox5)
+
+        self.setLayout(vbox)
+
+    def InputContext(self, fPath):
+
+        data = pd.read_csv(fPath)
+
+        # G : 객체들의 집합, M : 속성들의 집합, I : 객체와 속성 사이의 관계 집합 (I ⊆ G × M)
+        G = set(data.index)
+        M = set(data.columns)
+        I = set()
+
+        # Process : Formal Context를 읽어들여서 "적절한 Data구조 K"에 저장". formal context K:=(G, M, I)
+        for g in G:
+            for m in M:
+                if data[m][g] in ['x', 'X']:
+                    I.add((g, m))
+
+        K = [G, M, I]
+
+        return K
+
+    def ICresult(self, K):
+        G = K[0]
+        M = K[1]
+        I = K[2]
+
+        self.ICtb.append(" G ".center(110, '-'))
+        self.ICtb.append(str(G))
+        self.ICtb.append(" M ".center(110, '-'))
+        self.ICtb.append(str(M))
+        self.ICtb.append(" I ".center(111, '-'))
+        self.ICtb.append(str(I))
+        self.ICtb.append(" K ".center(111, '-'))
+        self.ICtb.append(str(K))
+    def CA(A):
         pass
+    
+    def CO(B):
+        pass
+
+    def powerset(self, array):
+        set_size = len(array)
+        set_pow = []
+
+        for i in range(2 ** set_size):
+            flag = bin(i)[2:].zfill(set_size)
+            subset = [array[j] for j in range(set_size) if flag[j] == '1']
+            set_pow.append(set(subset))
+
+        self.PStb.append(str(set_pow))
+        return set_pow
+
+    def extractConcepts(self, ic):
+        FC_set = []  # FC들을 저장할 함수
+        A = self.powerset(ic[0])  # 객채들의 부분집합
+        B = self.powerset(ic[1])  # 속성들의 부분집합
+        for a in A:  # A안의 a와 B안의 b를 서로 비교하여 조건이 맞다면 FC_set에 집어넣음
+            for b in B:
+                if self.CA(a) == b:
+                    if self.CO(b) == a:
+                        FC_set.append([a, b])
+                        break  # 넣은 뒤 루프를 끊고 다음루프로 넘어감
+        self.ECtb.append(FC_set)
+        return FC_set
+
+    def csv_open(self):
+        fname = QFileDialog.getOpenFileName(self, 'Open file', './', 'csv(*.csv)')
+        self.ICfilePathL.setText(fname[0])
+        self.ICtb.clear()
+
+    # ICtextBrowser clear 함수
+    def IC_clear_text(self):
+        self.ICtb.clear()
+
+    def PS_clear_text(self):
+        self.PStb.clear()
+
+    def EC_clear_text(self):
+        self.ECtb.clear()
+
 #-----------------------------------------------
 
 # main 실행
